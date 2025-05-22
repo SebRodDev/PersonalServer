@@ -1,7 +1,14 @@
 // Personal Web Server to host my personal website
 
+// this server will use an IPv4 address to only have a 32 bit IP address
+// also using IPv4 to implement a personal security feature instead of the
+// IPv6 which has a builtin security feature
+
 // This server uses assertions when any errors occur during initialization
 // Start of all of the necessary include -- will be built further on to it
+
+// FUTURE NOTE: When using a loop to accept connections do not use assertions
+// to check to see if the connection was possible
 
 #include <assert.h>
 #include <string.h>
@@ -43,12 +50,7 @@ int send_ok_response() {
 
 }
 
-
 int main() {
-
-    // this server will use an IPv4 address to only have a 32 bit IP address
-    // also using IPv4 to implement a personal security feature instead of the
-    // IPv6 which has a builtin security feature
 
     establish_server_socket();
 
@@ -62,8 +64,12 @@ int main() {
     // first focusing on getting one client to work then will implement
     // a loop that allows multiple users to connect
 
+    socklen_t socklen_element = sizeof(struct sockaddr_in);
+
     int client_fd = accept(server_socket, (struct sockaddr *) &current_address,
-                           sizeof(current_address));
+                           &socklen_element);
+
+    assert(client_fd != -1);
 
 
 }
