@@ -8,7 +8,12 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-// global variable for the socket file descriptor
+#define PORT_NUMBER (8000)
+#define BACKLOG_VALUE (5)
+
+// global variable for the server socket
+int server_socket;
+struct sockaddr_in current_address;
 
 void establish_server_socket() {
     // initializing the socket for the server
@@ -17,12 +22,11 @@ void establish_server_socket() {
     // ensuring that the socket was correctly initialized with an assert
     assert(server_fd != -1);
 
-    struct sockaddr_in current_address;
     memset(&current_address, 0, sizeof(current_address));
 
     // initializing the sockaddr stuct
     current_address.sin_family = AF_INET;
-    current_address.sin_port = htons(8000);
+    current_address.sin_port = htons(PORT_NUMBER);
 
     // binding to a specific port
     int binded_server = bind(server_fd, (struct sockaddr *) &current_address,
@@ -30,7 +34,15 @@ void establish_server_socket() {
 
     // ensuring that the bind function does not fail
     assert(binded_server != -1);
+
+    server_socket = server_fd;
 }
+
+// 200 OK response on initial connection
+int send_ok_response() {
+
+}
+
 
 int main() {
 
@@ -38,7 +50,20 @@ int main() {
     // also using IPv4 to implement a personal security feature instead of the
     // IPv6 which has a builtin security feature
 
-    // listen then accept each connection then send information from client to
-    // server
+    establish_server_socket();
+
+    // listening for connections
+    int listening_bind = listen(server_socket, BACKLOG_VALUE);
+
+    assert(listening_bind != -1);
+
+    // loop to accept connections
+
+    // first focusing on getting one client to work then will implement
+    // a loop that allows multiple users to connect
+
+    int client_fd = accept(server_socket, (struct sockaddr *) &current_address,
+                           sizeof(current_address));
+
 
 }
